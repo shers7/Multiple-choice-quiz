@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Year 9 Science | Heat Transfer & Waves Quiz</title>
+<style>
+:root{--navy:#183153;--blue:#2864dc;--pale:#eef4ff;--ink:#1f2937;--muted:#64748b;--green:#16794b;--red:#b42318;--border:#dbe3ef}
+*{box-sizing:border-box}
+body{margin:0;background:#f4f7fb;color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:linear-gradient(120deg,#183153,#2864dc);color:white;padding:34px 18px}
+.hero{max-width:850px;margin:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:700;opacity:.85}
+h1{margin:.35rem 0;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.15}
+header p{margin:.5rem 0 0;max-width:650px;color:#e5edff}
+main{max-width:850px;margin:24px auto;padding:0 16px 48px}
+.panel,.question{background:white;border:1px solid var(--border);border-radius:16px;box-shadow:0 4px 16px #1831530b}
+.panel{padding:18px 20px;margin-bottom:18px}
+.topline{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.score{font-weight:750;color:var(--navy)}
+.progress-track{height:9px;background:#e5eaf3;border-radius:999px;overflow:hidden;margin-top:12px}
+.progress-bar{height:100%;width:0;background:#43a879;transition:width .2s}
+.instructions{color:var(--muted);margin:.45rem 0 0;font-size:.95rem}
+.question{padding:22px;margin:16px 0}
+.qmeta{font-size:.82rem;font-weight:750;color:var(--blue);text-transform:uppercase;letter-spacing:.06em}
+h2{font-size:1.12rem;line-height:1.4;margin:8px 0 16px}
+.options{display:grid;gap:9px}
+.option{display:flex;align-items:flex-start;gap:11px;text-align:left;width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:11px;background:#fff;color:var(--ink);font:inherit;cursor:pointer;transition:border-color .15s,background .15s}
+.option:hover:not(:disabled){border-color:var(--blue);background:#f7f9ff}
+.letter{display:grid;place-items:center;flex:0 0 28px;height:28px;border-radius:8px;background:#eef2f8;font-size:.86rem;font-weight:750}
+.option:disabled{cursor:default;opacity:1}
+.option.correct{border-color:#6bc49b;background:#edfbf3}
+.option.correct .letter{background:#c9f2db;color:#075d38}
+.option.wrong{border-color:#f1a29d;background:#fff1f0}
+.option.wrong .letter{background:#ffdad7;color:#8c1d18}
+.feedback{display:none;margin-top:13px;padding:12px 14px;border-radius:10px;font-size:.94rem}
+.feedback.show{display:block}
+.feedback.good{background:#edfbf3;border-left:4px solid #1c9b61}
+.feedback.bad{background:#fff1f0;border-left:4px solid #d0443e}
+.feedback strong{display:block;margin-bottom:2px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}
+button.primary,button.secondary{border:0;border-radius:10px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer}
+button.primary{background:var(--blue);color:white}
+button.primary:hover{background:#1e50b5}
+button.secondary{background:#e7edf7;color:var(--navy)}
+button:focus-visible{outline:3px solid #f4b740;outline-offset:3px}
+#results{display:none;padding:24px}
+#results h2{font-size:1.5rem}
+.small{font-size:.9rem;color:var(--muted)}
+footer{text-align:center;color:var(--muted);padding:0 16px 28px;font-size:.85rem}
+@media(max-width:520px){header{padding:27px 16px}.question{padding:17px}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<header><div class="hero">
+<div class="eyebrow">Year 9 Science · Interactive quiz</div>
+<h1>Heat Transfer &amp; Waves</h1>
+<p>25 multiple-choice questions on conduction, convection, radiation, materials, infrared radiation and wave properties.</p>
+</div></header>
+<main>
+<section class="panel" aria-label="Quiz progress">
+<div class="topline"><strong id="progressText">0 of 25 answered</strong><span class="score" id="scoreText">Score: 0 / 0</span></div>
+<div class="progress-track" role="progressbar" aria-label="Questions answered" aria-valuemin="0" aria-valuemax="25" aria-valuenow="0" id="progressTrack"><div class="progress-bar" id="progressBar"></div></div>
+<p class="instructions">Choose one answer for each question. Feedback appears immediately after you select an option. You can change an answer only by restarting the quiz.</p>
+</section>
+<div id="quiz"></div>
+<section class="panel" id="results" aria-live="polite">
+<h2 id="resultTitle">Quiz complete!</h2><p id="resultMessage"></p>
+<button class="primary" onclick="restartQuiz()">Try again</button>
+</section>
+<div class="controls"><button class="primary" onclick="showResults()">Finish quiz and see results</button><button class="secondary" onclick="restartQuiz()">Restart quiz</button></div>
+</main>
+<footer>Science practice quiz · Your answers are scored in this browser and are not sent to a teacher.</footer>
+<script>
+const questions = [
+{q:"Which process transfers thermal energy through a metal spoon when one end is placed in hot water?",a:["Conduction","Convection","Radiation","Reflection"],c:0,e:"Conduction transfers energy through a material by particle interactions."},
+{q:"How is thermal energy mainly transferred through a liquid as it is heated from below?",a:["Conduction only","Convection","Reflection","Absorption only"],c:1,e:"Warmer, less dense liquid rises while cooler, denser liquid sinks, creating convection currents."},
+{q:"How does the Sun transfer energy to Earth through the vacuum of space?",a:["Conduction","Convection","Radiation","Direct contact"],c:2,e:"Electromagnetic radiation can travel through a vacuum; conduction and convection require matter."},
+{q:"Which material is generally the best thermal conductor?",a:["Copper","Wool","Foam","Rubber"],c:0,e:"Copper is a metal that transfers thermal energy efficiently."},
+{q:"Why is a saucepan handle often made from plastic or another insulating material?",a:["It increases heat transfer to the hand","It reduces heat transfer to the hand","It reflects all infrared radiation","It stops the saucepan absorbing heat"],c:1,e:"An insulating handle slows thermal energy transfer from the hot saucepan to your hand."},
+{q:"Which surface is generally the best absorber of infrared radiation?",a:["A dull black surface","A shiny silver surface","A polished white surface","A mirror-like surface"],c:0,e:"Dull black surfaces generally absorb infrared radiation effectively."},
+{q:"Which surface generally reflects infrared radiation most effectively?",a:["Dull black","Shiny silver","Rough black","Dark matte paint"],c:1,e:"Shiny silver surfaces reflect a large proportion of incident infrared radiation."},
+{q:"What happens when an object absorbs infrared radiation?",a:["It must immediately cool down","It gains energy and may warm up","Its mass doubles","It stops emitting radiation"],c:1,e:"Absorbed radiation transfers energy to the object, potentially increasing its temperature."},
+{q:"Which statement about electromagnetic waves is correct?",a:["They all require air to travel","They can transfer energy through a vacuum","They are all visible to humans","They travel only through solids"],c:1,e:"Electromagnetic waves do not require particles in a medium and can travel through a vacuum."},
+{q:"Which list shows electromagnetic waves from longest wavelength to shortest wavelength?",a:["Radio, microwave, infrared, visible, ultraviolet, X-ray, gamma","Gamma, X-ray, ultraviolet, visible, infrared, microwave, radio","Radio, infrared, microwave, visible, X-ray, ultraviolet, gamma","Visible, radio, microwave, infrared, gamma, ultraviolet, X-ray"],c:0,e:"The spectrum from longest to shortest wavelength is radio, microwave, infrared, visible, ultraviolet, X-ray and gamma."},
+{q:"Which electromagnetic wave is commonly used in medical imaging to examine bones?",a:["Radio waves","Infrared","X-rays","Microwaves"],c:2,e:"X-rays pass through soft tissues more readily than many bones, producing contrast in an image."},
+{q:"Which electromagnetic wave has the highest frequency?",a:["Radio waves","Visible light","Microwaves","Gamma rays"],c:3,e:"Gamma rays occupy the highest-frequency end of the electromagnetic spectrum."},
+{q:"Which statement best describes a transverse wave?",a:["Particles vibrate parallel to the direction of travel","Oscillations are perpendicular to the direction of travel","Particles must travel with the wave over long distances","It cannot transfer energy"],c:1,e:"In a transverse wave, oscillations are at right angles to the direction the wave travels."},
+{q:"What is the wavelength of a wave?",a:["The maximum displacement from equilibrium","The number of waves passing each second","The distance between consecutive corresponding points, such as crest to crest","The time taken for one complete cycle"],c:2,e:"Wavelength is the distance between points in the same phase of successive cycles."},
+{q:"What does the amplitude of a transverse wave measure?",a:["The distance between consecutive crests","The maximum displacement from equilibrium","The number of cycles each second","The speed of the wave only"],c:1,e:"Amplitude measures the greatest displacement from the resting or equilibrium position."},
+{q:"A wave completes 8 cycles in 2 seconds. What is its frequency?",a:["2 Hz","4 Hz","8 Hz","16 Hz"],c:1,e:"Frequency is cycles divided by time: 8 ÷ 2 = 4 cycles per second, or 4 Hz."},
+{q:"A wave has a wavelength of 2 m and a frequency of 150 Hz. What is its speed?",a:["75 m/s","152 m/s","300 m/s","75 Hz"],c:2,e:"Wave speed = frequency × wavelength = 150 Hz × 2 m = 300 m/s."},
+{q:"Which change would increase the amplitude of a wave?",a:["Increasing its maximum displacement from equilibrium","Increasing the distance between crests only","Increasing the number of cycles per second only","Changing its direction of travel only"],c:0,e:"Amplitude is the maximum displacement from equilibrium."},
+{q:"Why can a metal bench feel colder than a wooden bench at the same room temperature?",a:["The metal must be at a lower temperature","The metal conducts thermal energy away from your hand faster","Wood produces heat continuously","The metal reflects all heat from your hand"],c:1,e:"Metal's higher thermal conductivity makes thermal energy leave your hand more quickly."},
+{q:"Which statement about infrared radiation and temperature is most accurate?",a:["Only hot objects emit infrared radiation","Only black objects emit infrared radiation","All objects above absolute zero emit electromagnetic radiation","Cool objects absorb infrared but never emit it"],c:2,e:"All objects above absolute zero emit electromagnetic radiation, although the spectrum depends on temperature and emissivity."},
+{q:"A student holds their hand above a candle flame. Which process is mainly responsible for hot air rising to warm the hand?",a:["Conduction","Convection","Reflection","Insulation"],c:1,e:"Heated air expands, becomes less dense and rises, carrying thermal energy by convection."},
+{q:"Why does a vacuum flask often have shiny surfaces around its inner container?",a:["To increase conduction","To reduce radiation transfer","To create stronger convection currents","To absorb as much infrared as possible"],c:1,e:"Shiny surfaces reflect infrared radiation and reduce heat transfer by radiation."},
+{q:"Two waves travel at the same speed. Wave A has a higher frequency than Wave B. How do their wavelengths compare?",a:["Wave A has a longer wavelength","Wave A has a shorter wavelength","They must have the same wavelength","Frequency does not affect wavelength"],c:1,e:"At the same wave speed, a higher frequency corresponds to a shorter wavelength."},
+{q:"A wave's amplitude increases while its frequency and wavelength remain unchanged. Which property has definitely increased?",a:["The maximum displacement from equilibrium","The distance between crests","The number of cycles per second","The speed of the wave"],c:0,e:"Amplitude is the maximum displacement from equilibrium; changing it does not necessarily change frequency or wavelength."},
+{q:"Which statement correctly compares visible light and infrared radiation?",a:["Infrared has a shorter wavelength than visible light","Visible light has a lower frequency than radio waves","Infrared has a longer wavelength than visible light","Both are mechanical waves that require air"],c:2,e:"Infrared lies just beyond the red end of visible light and has a longer wavelength."}
+];
+const letters=["A","B","C","D"];
+const state=Array(questions.length).fill(null);
+const quiz=document.getElementById("quiz");
+questions.forEach((item,i)=>{
+ const card=document.createElement("section");card.className="question";card.id="question-"+i;
+ const meta=document.createElement("div");meta.className="qmeta";meta.textContent=`Question ${i+1} of ${questions.length}`;
+ const title=document.createElement("h2");title.textContent=item.q;
+ const options=document.createElement("div");options.className="options";
+ item.a.forEach((answer,j)=>{
+  const btn=document.createElement("button");btn.type="button";btn.className="option";
+  const letter=document.createElement("span");letter.className="letter";letter.textContent=letters[j];
+  const label=document.createElement("span");label.textContent=answer;
+  btn.append(letter,label);btn.addEventListener("click",()=>choose(i,j));btn.dataset.choice=j;options.append(btn);
+ });
+ const feedback=document.createElement("div");feedback.className="feedback";feedback.id="feedback-"+i;feedback.setAttribute("aria-live","polite");
+ card.append(meta,title,options,feedback);quiz.append(card);
+});
+function choose(i,j){
+ if(state[i]!==null)return;
+ state[i]=j;const item=questions[i],card=document.getElementById("question-"+i);
+ card.querySelectorAll(".option").forEach((btn,k)=>{btn.disabled=true;if(k===item.c)btn.classList.add("correct");if(k===j&&j!==item.c)btn.classList.add("wrong")});
+ const fb=document.getElementById("feedback-"+i);fb.classList.add("show",j===item.c?"good":"bad");
+ fb.innerHTML=`<strong>${j===item.c?"Correct!":"Not quite."}</strong>${item.e}`;
+ updateProgress();
+}
+function updateProgress(){
+ const answered=state.filter(v=>v!==null).length,score=state.reduce((n,v,i)=>n+(v===questions[i].c?1:0),0);
+ document.getElementById("progressText").textContent=`${answered} of ${questions.length} answered`;
+ document.getElementById("scoreText").textContent=`Score: ${score} / ${answered}`;
+ document.getElementById("progressBar").style.width=(answered/questions.length*100)+"%";
+ document.getElementById("progressTrack").setAttribute("aria-valuenow",answered);
+}
+function showResults(){
+ const answered=state.filter(v=>v!==null).length,score=state.reduce((n,v,i)=>n+(v===questions[i].c?1:0),0);
+ const box=document.getElementById("results");box.style.display="block";
+ document.getElementById("resultTitle").textContent=answered===questions.length?"Quiz complete!":"Quiz summary";
+ document.getElementById("resultMessage").textContent=`You answered ${answered} of ${questions.length} questions. Your current score is ${score} out of ${answered} answered question${answered===1?"":"s"}. ${answered===questions.length?"Final percentage: "+Math.round(score/questions.length*100)+"%.":"Answer the remaining questions to get your final score."}`;
+ box.scrollIntoView({behavior:"smooth",block:"center"});
+}
+function restartQuiz(){
+ state.fill(null);
+ document.querySelectorAll(".option").forEach(btn=>{btn.disabled=false;btn.classList.remove("correct","wrong")});
+ document.querySelectorAll(".feedback").forEach(fb=>{fb.className="feedback";fb.textContent=""});
+ document.getElementById("results").style.display="none";updateProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+updateProgress();
+</script>
+</body>
+</html>
